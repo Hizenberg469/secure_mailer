@@ -1,0 +1,320 @@
+/*** Colors ***/
+
+* {
+	mid-blue-color: #212d40;
+	dark-blue-color: #011826;
+	cell-unselected-color: #f2f2f2;
+	folder-selected-color: #495362;
+	light-grey-color: #cccccc;
+	mid-grey-color: #e0e0e0;
+	dark-grey-color: #999999;
+	white-color: white;
+	teal-color: #98c0bb;
+	selection-grey: #d1d1d1
+}
+
+/*** Text ***/
+
+@font-face{
+	font-family: 'Myriad Pro';
+    src: url("../font/Myriad_Pro_Regular.ttf");
+}
+
+@font-face{
+	font-family: 'Myriad Pro Light SemiCond';
+    src: url("../font/Myriad_Pro_Light_SemiCondensed.otf");
+}
+
+.text { -fx-text-fill: black; }
+.font-rockwell { -fx-font-family: 'Rockwell'; }
+.font-myriad { -fx-font-family: 'Myriad Pro'; }
+.font-bold { -fx-font-weight: bold; }
+.font-grey { -fx-text-fill: dark-grey-color; }
+.font-white { -fx-text-fill: white-color; }
+
+
+/*** General ***/
+
+#main-window-pane { -fx-background-color: white-color; }
+#account-pane { -fx-background-color: dark-blue-color; }
+#compose-key-pane { -fx-background-color: mid-blue-color; }
+
+/*** Login ***/
+
+.login-field { 
+	-fx-background-color: transparent;
+	-fx-font-size: 20;
+}
+#login-key { -fx-font-size: 35; }
+
+/*** Email Selection ***/
+
+.list-view .scroll-bar:vertical,
+.list-view .scroll-bar:horizontal {
+    -fx-scale-x: 0;
+    -fx-opacity: 0;
+    -fx-padding:-7;
+}
+#email-cell-view, #email-cell-view:selected {
+	-fx-focus-color: transparent;
+	-fx-faint-focus-color: transparent;
+}
+.email-cell {
+	-fx-graphic-text-gap: 0;
+	-fx-padding: 0px;
+	-fx-background-color: cell-unselected-color;
+	-fx-border-color: light-grey-color, light-grey-color, light-grey-color, transparent;
+	-fx-border-width: 0.5, 0.5, 0.5, 0;
+}
+.email-cell:selected { -fx-background-color: white-color; }
+.email-cell:hover { -fx-background-color: white-color; }
+.email-cell:empty { visibility: hidden; }
+.email-cell:selected > #email-cell-pane #email-cell-focused { -fx-background-color: teal-color; }
+#email-cell-title { -fx-font-size: 15; }
+#email-cell-title { -fx-text-fill: black; }
+
+#email-cell-message *, #email-cell-message  {
+	-fx-background-color: transparent;
+	-fx-border-color: transparent;
+}
+
+/*** Message View ***/
+
+#message-pane { -fx-background-color: white-color; }
+#message-title { -fx-font-size: 15; }
+#message-long-view .scroll-bar { visibility: hidden; }
+.line { -fx-stroke: light-grey-color; }
+
+/*** Folder Selection ***/
+
+#folder-view *, #folder-view, #folder-view:focused{
+	-fx-background-color: mid-blue-color;
+	-fx-text-fill: white-color;
+	-fx-border-color: transparent;
+}
+#folder-view .tree-cell > .tree-disclosure-node  {   -fx-background-color: transparent;}
+#folder-view .tree-cell:hover { -fx-text-fill: teal-color; }
+#folder-view .tree-cell:focused { -fx-background-color: folder-selected-color; -fx-text-fill: teal-color; }
+ 
+/*** Composer Window ***/
+  
+#editor { -fx-background-color: white-color; }
+#editor  .top-toolbar, .bottom-toolbar {-fx-background-color: transparent}
+#editor .grid, .combo-box *, .color-picker .arrow-button .arrow { -fx-background-color: transparent; }
+.combo-box .arrow-button .arrow {-fx-background-color: black; }
+ 
+#editor * .button, .html-editor-align-justify, .html-editor-outdent, .html-editor-indent,
+.html-editor-align-left, .html-editor-align-center, .html-editor-align-right,
+.html-editor-bullets, .html-editor-numbers, .html-editor-foreground, .html-editor-background, .font-menu-button,
+.font-menu-button *, .html-editor-underline, .html-editor-strike, .html-editor-italic, .html-editor-bold {
+	-fx-background-color: mid-grey-color;
+}
+
+#editor * .button:hover, .html-editor-align-justify:hover, .html-editor-outdent:hover, .html-editor-indent:hover,
+.html-editor-align-left:hover, .html-editor-align-center:hover, .html-editor-align-right:hover,
+.html-editor-bullets:hover, .html-editor-numbers:hover, .html-editor-foreground:hover, .html-editor-background:hover, .font-menu-button:hover,
+.font-menu-button *:hover, .html-editor-underline:hover, .html-editor-strike:hover, .html-editor-italic:hover, .html-editor-bold:hover {
+	-fx-background-color: selection-grey;
+}
+
+/* Attachments */
+
+#attach-label { -fx-font-family: 'Rockwell'; }
+.attach-cell:empty { visibility: hidden; }
+#attachments-label {}
+#attachment-list {
+	-fx-background-color: transparent;
+	-fx-border-color: transparent;
+}
+.attach-cell {
+	-fx-background-color: transparent;
+	-fx-border-color: transparent;
+}
+
+/*** Settings ***/
+ 
+#settings-pane { -fx-background-color: dark-blue-color; }
+
+/* Icons */
+
+#gmail-folder { -fx-image: url("../img/default/idle/at.png"); }
+#inbox-folder { -fx-image: url("../img/default/idle/inbox.png"); }
+#all-folder { -fx-image: url("../img/default/idle/mail.png"); }
+#sent-folder { -fx-image: url("../img/default/idle/sent.png"); }
+#spam-folder { -fx-image: url("../img/default/idle/spam.png"); }
+#important-folder { -fx-image: url("../img/default/idle/flag.png"); }
+#draft-folder { -fx-image: url("../img/default/idle/draft.png"); }
+#star-folder { -fx-image: url("../img/default/idle/star-folder.png"); }
+#trash-folder { -fx-image: url("../img/default/idle/trash-folder.png"); }
+
+.tree-cell:hover > #gmail-folder, .tree-cell:focused > #gmail-folder { -fx-image: url("../img/default/hover/at.png"); }
+.tree-cell:hover > #inbox-folder, .tree-cell:focused > #inbox-folder { -fx-image: url("../img/default/hover/inbox.png"); }
+.tree-cell:hover > #all-folder, .tree-cell:focused > #all-folder { -fx-image: url("../img/default/hover/mail.png"); }
+.tree-cell:hover > #sent-folder, .tree-cell:focused > #sent-folder { -fx-image: url("../img/default/hover/sent.png"); }
+.tree-cell:hover > #spam-folder, .tree-cell:focused > #spam-folder { -fx-image: url("../img/default/hover/spam.png"); }
+.tree-cell:hover > #important-folder, .tree-cell:focused > #important-folder { -fx-image: url("../img/default/hover/flag.png"); }
+.tree-cell:hover > #draft-folder, .tree-cell:focused > #draft-folder { -fx-image: url("../img/default/hover/draft.png"); }
+.tree-cell:hover > #star-folder, .tree-cell:focused > #star-folder { -fx-image: url("../img/default/hover/star-folder.png"); }
+.tree-cell:hover > #trash-folder, .tree-cell:focused > #trash-folder { -fx-image: url("../img/default/hover/trash-folder.png"); }
+
+#paper-clip { -fx-image: url("../img/default/idle/paper-clip.png"); }
+#email-cell-clip { -fx-image: url("../img/default/idle/email-cell-clip.png"); }
+#login-email-icon { -fx-image: url("../img/default/idle/login-email-icon.png"); }
+#login-pass-icon { -fx-image: url("../img/default/idle/login-pass-icon.png"); }
+
+#login-key {
+	-fx-background-color: transparent;
+	-fx-background-image: url('../img/default/idle/login-key.png');
+	-fx-background-size: 367px;  
+	-fx-background-repeat: no-repeat;
+	-fx-background-position: center;
+}
+
+#login-key:hover {
+	-fx-background-color: transparent;
+	-fx-background-image: url('../img/default/hover/login-key.png');
+	-fx-background-size: 367px;  
+	-fx-background-repeat: no-repeat;
+	-fx-background-position: center;
+}
+
+#settings-key {
+	-fx-graphic: url('../img/default/idle/settings.png');
+	-fx-scale-x: 0.04;
+	-fx-scale-y: 0.04;
+	-fx-translate-x: -203;
+	-fx-translate-y: -205;
+	-fx-background-color: transparent;
+}
+
+#settings-key:hover {
+	-fx-graphic: url('../img/default/hover/settings.png');
+	-fx-scale-x: 0.04;
+	-fx-scale-y: 0.04;
+	-fx-translate-x: -203;
+	-fx-translate-y: -205;
+	-fx-background-color: transparent;
+}
+
+#key-trash {
+	-fx-graphic: url('../img/default/idle/trash.png');
+	-fx-scale-x: 0.02;
+	-fx-scale-y: 0.02;
+	-fx-background-color: transparent;
+}
+#key-star {
+	-fx-graphic: url('../img/default/idle/star.png');
+	-fx-scale-x: 0.018;
+	-fx-scale-y: 0.018;
+	-fx-background-color: transparent;
+}
+#key-trash:hover, #key-trash:focused {
+	-fx-graphic: url('../img/default/hover/trash.png');
+	-fx-scale-x: 0.02;
+	-fx-scale-y: 0.02;
+	-fx-background-color: transparent;
+}
+#key-star:hover, #key-star:focused {
+	-fx-graphic: url('../img/default/hover/star.png');
+	-fx-scale-x: 0.018;
+	-fx-scale-y: 0.018;
+	-fx-background-color: transparent;
+}
+
+#send-key {
+	-fx-graphic: url('../img/default/idle/send-message.png');
+	-fx-scale-x: 0.09;
+	-fx-scale-y: 0.09;
+	-fx-background-color: transparent;
+}
+
+#send-key:hover {
+	-fx-graphic: url('../img/default/hover/send-message.png');
+	-fx-scale-x: 0.09;
+	-fx-scale-y: 0.09;
+	-fx-background-color: transparent;
+}
+
+#attach-key {
+	-fx-graphic: url('../img/default/idle/attach-message.png');
+	-fx-scale-x: 0.08;
+	-fx-scale-y: 0.08;
+	-fx-background-color: transparent;
+}
+
+#attach-key:hover {
+	-fx-graphic: url('../img/default/hover/attach-message.png');
+	-fx-scale-x: 0.08;
+	-fx-scale-y: 0.08;
+	-fx-background-color: transparent;
+}
+
+#compose-key { 
+	-fx-background-color: transparent;
+	-fx-background-image: url('../img/default/idle/compose-key.png');
+	-fx-background-size: 139px;  
+	-fx-background-repeat: no-repeat;
+	-fx-background-position: center;
+}
+
+#compose-key:hover { 
+	-fx-background-color: transparent;
+	-fx-background-image: url('../img/default/hover/compose-key.png');
+	-fx-background-size: 139px;  
+	-fx-background-repeat: no-repeat;
+	-fx-background-position: center;
+}
+
+#compose-cancel-key {
+	-fx-graphic: url('../img/default/idle/cancel-message.png');
+	-fx-scale-x: 0.08;
+	-fx-scale-y: 0.08;
+	-fx-background-color: transparent;
+}
+
+#compose-cancel-key:hover {
+	-fx-graphic: url('../img/default/hover/cancel-message.png');
+	-fx-scale-x: 0.08;
+	-fx-scale-y: 0.08;
+	-fx-background-color: transparent;
+}
+
+#compose-attached-icon {
+	-fx-image: url('../img/default/idle/attached-message.png');
+	-fx-scale-x: 0.9;
+	-fx-scale-y: 0.9;
+}
+
+#field-send-to,  #field-title {
+ 	-fx-background-color: transparent;
+ 	-fx-background-image: url("../img/default/idle/composer-field.png");
+ 	-fx-background-size: 469px;  
+	-fx-background-repeat: no-repeat;
+	-fx-background-position: center;	
+}
+
+#field-send-to:hover,  #field-title:hover,
+#field-send-to:focused,  #field-title:focused {
+ 	-fx-background-color: transparent;
+ 	-fx-background-image: url("../img/default/hover/composer-field.png");
+ 	-fx-background-size: 469px;  
+	-fx-background-repeat: no-repeat;
+	-fx-background-position: center;	
+}
+
+#search-bar { 
+	-fx-background-color: transparent;
+	-fx-background-image: url('../img/default/idle/search-bar.png');
+	-fx-background-size: 232px;  
+	-fx-background-repeat: no-repeat;
+	-fx-background-position: center;
+}
+
+#search-bar:hover { 
+	-fx-background-color: transparent;
+	-fx-background-image: url('../img/default/hover/search-bar.png');
+	-fx-background-size: 232px;  
+	-fx-background-repeat: no-repeat;
+	-fx-background-position: center;
+}
+

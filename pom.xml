@@ -1,0 +1,157 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>com</groupId>
+  <artifactId>secure_mailer</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+  <packaging>jar</packaging>
+
+  <name>secure_mailer</name>
+  <url>http://maven.apache.org</url>
+
+  <properties>
+      <configuration-mainClass>com.secure_mailer.backend.MainClass</configuration-mainClass>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
+  
+  <build>
+        <resources>
+            <resource>
+                <!-- Path to your resources folder -->
+                <directory>src/main/resources</directory>
+                <!-- Optional: Include only specific files -->
+                <includes>
+                    <include>**/*.png</include>  <!-- Only PNG files -->
+                    <include>**/*.css</include>  <!-- Only CSS files -->
+                    <include>**/*.fxml</include>
+                    <include>**/*.ttf</include>
+                    <include>**/*.otf</include>
+                    <include>**/*.default.address.map</include>
+                </includes>
+                <!-- Optional: Exclude specific files -->
+                <excludes>
+                    <exclude>**/test/**</exclude> <!-- Exclude test resources, if any -->
+                </excludes>
+            </resource>
+        </resources>
+        <plugins>
+        
+	         <plugin>
+	            <groupId>org.openjfx</groupId>
+	            <artifactId>javafx-maven-plugin</artifactId>
+	            <version>0.0.5</version>
+	            <executions>
+	                <execution>
+	                    <goals>
+	                        <goal>run</goal>
+	                    </goals>
+	                </execution>
+	            </executions>
+	        </plugin>
+            
+	        <plugin>
+	            <groupId>org.codehaus.mojo</groupId>
+	            <artifactId>exec-maven-plugin</artifactId>
+	            <version>3.5.0</version>
+	            <configuration>
+	                <mainClass>com.secure_mailer.App</mainClass> <!-- Replace with your main class -->
+	            </configuration>
+	        </plugin>
+	        
+	        <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-compiler-plugin</artifactId>
+            <version>3.8.1</version> <!-- or later -->
+            <configuration>
+                <source>17</source> <!-- Use 15 or higher, e.g., 17 if using Java 17 -->
+                <target>17</target>
+            </configuration>
+        </plugin>
+	    </plugins>
+
+ </build>
+
+  <dependencies>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>3.8.1</version>
+      <scope>test</scope>
+    </dependency>
+    
+    <dependency>
+	  <groupId>commons-codec</groupId>
+	  <artifactId>commons-codec</artifactId>
+	  <version>1.15</version>
+	</dependency>
+	
+	<dependency>
+	    <groupId>com.h2database</groupId>
+	    <artifactId>h2</artifactId>
+	    <version>2.1.214</version>
+	</dependency>
+	
+	<dependency>
+	    <groupId>com.gluonhq</groupId>
+	    <artifactId>gluonfx-maven-plugin</artifactId>
+	    <version>1.0.24</version>
+	</dependency>
+	
+	
+	<!-- JavaFX dependencies (adjust for specific modules you need) -->
+    <dependency>
+        <groupId>org.openjfx</groupId>
+        <artifactId>javafx-controls</artifactId>
+        <version>23</version> <!-- Adjust this version based on your setup -->
+    </dependency>
+    <dependency>
+        <groupId>org.openjfx</groupId>
+        <artifactId>javafx-fxml</artifactId>
+        <version>23</version>
+    </dependency>
+    <dependency>
+        <groupId>org.openjfx</groupId>
+        <artifactId>javafx-graphics</artifactId>
+        <version>23</version>
+    </dependency>
+    
+    <dependency>
+        <groupId>org.openjfx</groupId>
+        <artifactId>javafx-media</artifactId>
+        <version>23</version>
+    </dependency>
+    <dependency>
+        <groupId>org.openjfx</groupId>
+        <artifactId>javafx-swing</artifactId>
+        <version>23</version>
+    </dependency>
+    <dependency>
+        <groupId>org.openjfx</groupId>
+        <artifactId>javafx-web</artifactId>
+        <version>23</version>
+    </dependency>
+
+<!-- JavaMail Dependency -->
+    <dependency>
+        <groupId>javax.mail</groupId>
+        <artifactId>javax.mail-api</artifactId>
+        <version>1.6.2</version> <!-- A stable version of JavaMail -->
+    </dependency>
+    <dependency>
+        <groupId>com.sun.mail</groupId>
+        <artifactId>javax.mail</artifactId>
+        <version>1.6.2</version> <!-- Ensures the implementation is included -->
+    </dependency>
+
+    <!-- javax.activation Dependency -->
+    <dependency>
+        <groupId>javax.activation</groupId>
+        <artifactId>activation</artifactId>
+        <version>1.1.1</version> <!-- A stable version of Activation -->
+    </dependency>
+	
+  </dependencies>
+  
+  
+</project>

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.String?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListCell?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
+
+<fx:root editable="false" focusTraversable="false" graphicTextGap="0.0" prefHeight="100.0" prefWidth="300.0" styleClass="email-cell" type="javafx.scene.control.ListCell" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<graphic>
+<AnchorPane id="email-cell-pane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="100.0" prefWidth="300.0" stylesheets="@../css/themeDefault.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <ImageView fitHeight="100.0" fitWidth="301.0" layoutX="-1.0" opacity="0.57" visible="false" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <image>
+            <Image url="@../img/email-cell-template.png" />
+         </image>
+      </ImageView>
+      <Label id="email-cell-name" fx:id="sender" focusTraversable="false" layoutX="24.0" layoutY="11.0" prefHeight="17.0" prefWidth="177.0">
+               <styleClass>
+                  <String fx:value="font-rockwell" />
+                  <String fx:value="font-grey" />
+               </styleClass></Label>
+      <Label id="email-cell-date" fx:id="date" alignment="CENTER_RIGHT" focusTraversable="false" layoutX="222.0" layoutY="11.0" prefHeight="17.0" prefWidth="61.0">
+               <styleClass>
+                  <String fx:value="font-rockwell" />
+                  <String fx:value="font-grey" />
+               </styleClass></Label>
+      <Label id="email-cell-title" fx:id="title" focusTraversable="false" layoutX="24.0" layoutY="29.0" prefHeight="17.0" prefWidth="192.0">
+               <styleClass>
+                  <String fx:value="font-rockwell" />
+                  <String fx:value="font-bold" />
+               </styleClass></Label>
+      <TextArea id="email-cell-message" fx:id="message" editable="false" focusTraversable="false" layoutX="15.0" layoutY="48.0" mouseTransparent="true" prefHeight="43.0" prefWidth="219.0" wrapText="true">
+               <styleClass>
+                  <String fx:value="font-rockwell" />
+                  <String fx:value="font-grey" />
+               </styleClass></TextArea>
+      <ImageView id="email-cell-clip" fx:id="attachment" fitHeight="34.0" fitWidth="33.0" layoutX="257.0" layoutY="60.0" pickOnBounds="true" preserveRatio="true" visible="false" />
+            <Pane id="email-cell-focused" fx:id="selected" layoutY="-1.0" prefHeight="100.0" prefWidth="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="290.0" AnchorPane.topAnchor="0.0" />
+   </children>
+</AnchorPane>
+</graphic>
+</fx:root>

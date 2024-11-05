@@ -17,6 +17,7 @@ import javafx.application.Platform;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.util.Duration;
+import java.util.StringTokenizer;
 
 public class ValidatorClient {
 	
@@ -154,7 +155,9 @@ public class ValidatorClient {
 			String packet = formPacket(data);
 			
 			//Packet ready.
-			packet = String.valueOf(1) + packet;
+//			packet = String.valueOf() + packet;
+			
+			System.out.println("Packet for authentication : "+packet);
 			
 			//Send the size of packet.
 			//ps.println(packet.length());
@@ -166,36 +169,69 @@ public class ValidatorClient {
 			
 			String msg = br.readLine();
 			
-			//Parse the packet.
-			int i = 0;
-			String num = "";
-			for(; i < msg.length() ; i++ ) {
-				if( msg.charAt(i) != ':' )
-					num += Character.toString(msg.charAt(i));
-				else
-					break;
-			}
+			StringTokenizer tokenizer = new StringTokenizer(msg, ":");
+			this.timeStamp = tokenizer.nextToken();
+			this.authCode = tokenizer.nextToken();
+//			//Parse the packet.
+//			int i = 0;
+//			String num = "";
+//			for(; i < msg.length() ; i++ ) {
+//				if( msg.charAt(i) != ':' )
+//					num += Character.toString(msg.charAt(i));
+//				else
+//					break;
+//			}
+//			
+//			num = num + "\0";
+//			if( num.equals("420") ) {
+//				Platform.runLater(() -> showAlert("Error", "Email record not found on server."));
+//				return false;
+//			}
+//			
+//			this.timeStamp = num;
+//			i = i + 1;
+//			num = "";
+//			for(; i < msg.length() ; i++ ) {	
+//				num += Character.toString(msg.charAt(i));	
+//			}
+////			num = num + "\0";
+//			this.authCode = num + "\0";
 			
-			
-			if( num.equals("420") ) {
-				Platform.runLater(() -> showAlert("Error", "Email record not found on server."));
-				return false;
-			}
-			
-			this.timeStamp = num;
-			i = i + 1;
-			num = "";
-			for(; i < msg.length() ; i++ ) {	
-				num += Character.toString(msg.charAt(i));	
-			}
-			this.authCode = num;
+			System.out.println("Size of timestamp : " + this.timeStamp.length());
+			this.authCode = (this.authCode).substring(0, 6);
+			System.out.println("Size of authCode : " + this.authCode.length());
 			
 			String secretKey = SecretCodeDAO.getSecretCode(fromEmailId);
-			String totp = generateTOTP( secretKey, Long.parseLong(this.timeStamp));
+			String totp = generateTOTP( secretKey, Long.parseLong(this.timeStamp.trim()));
 			
+			System.out.println("TimeStamp : "+this.timeStamp);
+			System.out.println("AuthCode : "+this.authCode);
 			
+			System.out.println("TOTP : "+totp);
+			
+			String temp = this.authCode;
+			int serverTOTP = -132;
+			try {
+				serverTOTP = Integer.parseInt(temp.trim());
+			} catch (NumberFormatException e) {
+			    System.err.println("Problem in serverTOTP");
+			}
+			
+			int clientTOTP = 4324;
+			try {
+				clientTOTP = Integer.parseInt(totp.trim());
+			} catch (NumberFormatException e) {
+				System.err.println("Problem in clientTOTP");
+			}
+			
+			System.out.println("Server TOTP : "+serverTOTP);
+			System.out.println("Client TOTP : "+clientTOTP);
+			
+			boolean result = (serverTOTP == clientTOTP);
+			
+			System.out.println("Result : "+result);
 		
-			return (totp == this.authCode);
+			return result;
 			
 		} catch(SQLException e) {
 			

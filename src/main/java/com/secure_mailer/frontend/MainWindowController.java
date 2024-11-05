@@ -299,6 +299,8 @@ public class MainWindowController extends BaseController implements Initializabl
 		
 		emailMessage.setIsAuthenticated(isAuthenticated);
 		
+		System.out.println("Is Authenticated : "+isAuthenticated);
+		
 		if(emailMessage != null) {
 			if (isAuthenticated) {
 				emailManager.setSelectedMessage(emailMessage);

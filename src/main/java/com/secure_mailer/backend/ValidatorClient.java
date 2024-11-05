@@ -144,6 +144,7 @@ public class ValidatorClient {
 				this.emlHash = (this.emlHash).substring(0, 100);
 			
 			System.out.println("Eml Hash : "+this.emlHash);
+			System.out.println("Eml Hash size : "+this.emlHash.length());
 			
 			String[] data = new String[] {
 					this.emlHash

@@ -54,10 +54,12 @@ public class MessageRendererService extends Service<Object>{
 		String contentType = message.getContentType();
 		if(isSimpleType(contentType)){
 			
-			if( emailMessage.getIsAuthenticated() )
+			if( emailMessage.getIsAuthenticated() ) {
 				stringBuffer.append(message.getContent().toString());
-			else
+			}
+			else {
 				stringBuffer.append(encryptMessage(message.getContent().toString()));
+			}
 			
 		} else if (isMultipartType(contentType)) {
 			Multipart multipart = (Multipart) message.getContent();
@@ -71,10 +73,12 @@ public class MessageRendererService extends Service<Object>{
 			String contentType = bodyPart.getContentType();
 			if (isSimpleType(contentType)) {
 				
-				if( emailMessage.getIsAuthenticated() )
+				if( emailMessage.getIsAuthenticated() ) {
 					stringBuffer.append(bodyPart.getContent().toString());
-				else
+				}
+				else {
 					stringBuffer.append(encryptMessage(bodyPart.getContent().toString()));
+				}
 				
 			} else if (isMultipartType(contentType)){
 				Multipart multipart2 = (Multipart) bodyPart.getContent();
@@ -91,11 +95,12 @@ public class MessageRendererService extends Service<Object>{
 	}
 
 	private boolean isSimpleType(String contentType) {
-		if(contentType.contains("TEXT/HTML") ||
-		   contentType.contains("mixed") ||
+		if(contentType.contains("TEXT/HTML") ||   
 		   contentType.contains("text")) {
 			return true;
 		} else return false;
+		
+//		contentType.contains("mixed") ||
 	}
 	
 	private boolean isMultipartType(String contentType) {

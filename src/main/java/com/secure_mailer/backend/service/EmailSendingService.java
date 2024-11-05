@@ -22,6 +22,11 @@ import javafx.concurrent.Task;
 import javax.crypto.SecretKey;
 import java.util.Base64;
 
+import java.util.Properties;
+import javax.mail.Folder;
+import javax.mail.Session;
+import javax.mail.Store;
+
 public class EmailSendingService extends Service<Void> {
 
 	private EmailAccount emailAccount;
@@ -57,7 +62,7 @@ public class EmailSendingService extends Service<Void> {
 			protected Void call() throws Exception {
 				try {
 					
-					System.out.println("From email id : "+emailAccount.getAddress());
+//					System.out.println("From email id : "+emailAccount.getAddress());
 					MimeMessage mimeMessage = new MimeMessage(emailAccount.getSession());
 					mimeMessage.setFrom(new InternetAddress(emailAccount.getAddress()+"@peachy.in.net"));
 					mimeMessage.addRecipients(Message.RecipientType.TO, recipient);
@@ -96,6 +101,9 @@ public class EmailSendingService extends Service<Void> {
 							emailAccount.getPassword());
 					transport.sendMessage(mimeMessage, mimeMessage.getAllRecipients());
 					transport.close();
+					
+					storeInSentFolder("peachy.in.net", emailAccount.getAddress(), emailAccount.getPassword(), mimeMessage);
+					
 				} catch(MessagingException e) {
 					e.printStackTrace();
 				} catch (Exception e) {
@@ -104,5 +112,55 @@ public class EmailSendingService extends Service<Void> {
 			}
 		};
 	}
+	
+	
+    private static void storeInSentFolder(String imapHost, String username, String password, MimeMessage message) {
+        // IMAP server properties
+        Properties imapProps = new Properties();
+        imapProps.put("mail.store.protocol", "imaps");
+        imapProps.put("mail.imap.host", imapHost);
+        imapProps.put("mail.imap.port", "993");
+        imapProps.put("mail.imap.ssl.enable", "true");  // Use SSL for IMAP
+        
+        imapProps.setProperty("mail.mime.encodeparameters", "true");
+        //  properties.setProperty("mail.mime.decodeparameters","true");
+        imapProps.setProperty("mail.mime.encodefilename", "true");
+        // properties.setProperty("mail.mime.decodefilename","true");
+
+        try {
+            // Connect to the IMAP store
+            Session session = Session.getDefaultInstance(imapProps);
+            Store store = session.getStore("imaps");
+            store.connect(username, password);
+
+            // Open the "Sent" folder
+            Folder sentFolder = store.getFolder("Sent");  // Adjust based on provider's folder name
+            if (!sentFolder.exists()) {
+                sentFolder.create(Folder.HOLDS_MESSAGES);
+            }
+            sentFolder.open(Folder.READ_WRITE);
+
+            try {
+
+                sentFolder.appendMessages(new Message[]{message});
+               // Message[] msgs = folder.getMessages();
+                //message.setFlag(FLAGS.Flag.RECENT, true);
+                System.out.println("Msg send and saved ....");
+
+            } catch (Exception ignore) {
+                System.out.println("error processing message " + ignore.getMessage());
+            } finally {
+                store.close();
+               // folder.close(false);
+            }
+            
+            // Close the folder and store connection
+            sentFolder.close(false);
+            store.close();
+
+        } catch (MessagingException e) {
+            e.printStackTrace();
+        }
+    }
 	
 }

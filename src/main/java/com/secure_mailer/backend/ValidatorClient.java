@@ -68,6 +68,9 @@ public class ValidatorClient {
 		this.toEmailId = toEmailId;
 		this.emlHash = emlHash;
 		
+		System.out.println("Size of eml hash : "+this.emlHash.length());
+		System.out.println("eml hash : "+this.emlHash);
+		
 		PrintStream ps = null;
 		
 		try {
@@ -78,6 +81,10 @@ public class ValidatorClient {
 			long timeStep = Instant.now().getEpochSecond() / 30;
 			this.timeStamp = Long.toString(timeStep);
 			this.authCode = generateTOTP(secretKey, timeStep);
+			
+//			String hash = "";
+			if( this.emlHash.length() > 100 )
+				this.emlHash = (this.emlHash).substring(0, 100);
 			
 			String[] data = new String[] {
 					this.fromEmailId,
@@ -132,6 +139,11 @@ public class ValidatorClient {
 		try {
 			ps=new PrintStream(skt.getOutputStream());
 			br=new BufferedReader(new InputStreamReader(skt.getInputStream()));
+			
+			if( this.emlHash.length() > 100 )
+				this.emlHash = (this.emlHash).substring(0, 100);
+			
+			System.out.println("Eml Hash : "+this.emlHash);
 			
 			String[] data = new String[] {
 					this.emlHash

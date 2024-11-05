@@ -15,6 +15,7 @@ import com.secure_mailer.backend.service.MessageRendererService;
 import com.secure_mailer.backend.BaseController;
 import com.secure_mailer.backend.DatabaseSetup;
 import com.secure_mailer.backend.EmailManager;
+import com.secure_mailer.backend.HashGenerator;
 import com.secure_mailer.backend.SecretCodeDAO;
 import com.secure_mailer.backend.ValidatorClient;
 import com.secure_mailer.backend.EmailAccount;
@@ -35,10 +36,10 @@ import javafx.scene.web.HTMLEditor;
 import javafx.scene.web.WebView;
 import javafx.util.Callback;
 
-import javax.activation.DataHandler;
-import javax.activation.DataSource;
-import javax.activation.FileDataSource;
-import javax.crypto.Cipher;
+//import javax.activation.DataHandler;
+//import javax.activation.DataSource;
+//import javax.activation.FileDataSource;
+//import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
@@ -52,9 +53,10 @@ import javafx.animation.PauseTransition;
 //import javafx.util.Duration;
 //import javafx.application.Platform;
 
-import javax.mail.internet.MimeBodyPart;
-import javax.mail.internet.MimeMessage;
-import javax.mail.internet.MimeMultipart;
+//import javax.mail.internet.InternetAddress;
+//import javax.mail.internet.MimeBodyPart;
+//import javax.mail.internet.MimeMessage;
+//import javax.mail.internet.MimeMultipart;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -73,6 +75,12 @@ import javafx.application.Platform;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.util.Duration;
+
+import com.secure_mailer.backend.SecretKeyController;
+import javafx.scene.Parent;
+import javafx.stage.Modality;
+
+//import com.secure_mailer.backend.HashGenerator;
 
 //import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -261,10 +269,29 @@ public class MainWindowController extends BaseController implements Initializabl
 		if( emailMessage.getFromEmailID().equals(this.fromEmailID + "@peachy.in.net") == false) {
         	String fromEmailId = emailMessage.getSender();
         	String toEmailId = emailManager.getEmailAccount().getAddress();
-        	String emlHash = generateEmlHash(emailMessage.getMessage(), emailMessage.getSecretKey());
+        	String sKey = "";
         	
-        	ValidatorClient receiver = new ValidatorClient("peachy.in.net",2001);
+        	try {
+				sKey = SecretCodeDAO.getSecretCode(fromEmailId);
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+        	
+
+        	String emlHash = generateEmlHash(emailMessage.getMessage(),StringToSecretKey.stringToSecretKey(sKey));
+//        	String emlHash = Integer.toString(emailMessage.getMessage().hashCode());
+//			try {
+//				emlHash = HashGenerator.generateHash(emailMessage.getMessage().getContent().toString());
+//			} catch (IOException | MessagingException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
+        	
+        	ValidatorClient receiver = new ValidatorClient("peachy.in.net",9000);
             isAuthenticated = receiver.bringCode(fromEmailId, toEmailId, emlHash);
+            
+            receiver.closeValidatorClient();
     	}
 		else {
 			isAuthenticated = true;
@@ -349,6 +376,7 @@ public class MainWindowController extends BaseController implements Initializabl
     	String toId = composeTo.getText();
     	String secretKey = "";
     	
+    	
     	try {
 			secretKey = SecretCodeDAO.getSecretCode(toId);
 		} catch (SQLException e) {
@@ -378,6 +406,7 @@ public class MainWindowController extends BaseController implements Initializabl
     			attachments,
     			secretKey);
     	
+    	
     	EmailSendingService emailSenderService = new EmailSendingService(
 				emailManager.getEmailAccount(),
 				composeTitle.getText(),
@@ -401,6 +430,8 @@ public class MainWindowController extends BaseController implements Initializabl
 				e1.printStackTrace();
 			}
     		
+    		
+    		sender.closeValidatorClient();
     	});
     	
     	
@@ -422,6 +453,55 @@ public class MainWindowController extends BaseController implements Initializabl
     		composeAttachIcon.setVisible(true);
     	}
     }
+    
+    @FXML
+    void generateKey() {
+    	KeyGenerator keyGen;
+      	String sKey = "";
+		try {
+			keyGen = KeyGenerator.getInstance("AES");
+			
+			keyGen.init(128); // You can also use 192 or 256-bit key size
+		    SecretKey secretKey = keyGen.generateKey();
+		    sKey = SecretKeyToString.secretKeyToString(secretKey);
+		} catch (NoSuchAlgorithmException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		try {
+            // Load the FXML file
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/SecretKeyWindow.fxml"));
+            Parent root = loader.load();
+
+            // Get the controller and set the secret key
+            SecretKeyController controller = loader.getController();
+            controller.setSecretKey(sKey);
+
+            // Create a new stage for the popup window
+            Stage stage = new Stage();
+            stage.initModality(Modality.APPLICATION_MODAL); // Block other windows until this is closed
+            stage.setTitle("Secret Key");
+            stage.setScene(new Scene(root));
+            stage.setResizable(false); // Optional: Make window non-resizable
+            stage.showAndWait();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
+//    private void showAlertAndWait(String title, String content) {
+//	    Alert alert = new Alert(AlertType.INFORMATION);
+//	    alert.setTitle(title);
+//	    alert.setHeaderText(null);
+//	    alert.setContentText(content);
+//	    alert.showAndWait();
+//
+////	    // Create a PauseTransition for 10 seconds
+////	    PauseTransition delay = new PauseTransition(Duration.seconds(10));
+////	    delay.setOnFinished(event -> alert.close()); // Close alert after 10 seconds
+////	    delay.play(); // Start the timer
+//	}
     
     @FXML
     private void openCRUDWindow() {
@@ -478,8 +558,21 @@ public class MainWindowController extends BaseController implements Initializabl
     private String generateEmlHash(Message message, SecretKey key) {
     	try {
     		
-    		String msg = MessageToString(message);
-			String encryptMessage = encryptMessage(msg, key);
+    		String msg = "";
+    		String contentType = message.getContentType();
+    		if (isMultipartType(contentType)) {
+    			Multipart multipart = (Multipart) message.getContent();
+    			msg = loadMultipart(multipart);
+    		}
+    		else if(isSimpleType(contentType)){
+    			
+    			msg = message.getContent().toString();
+    			
+    		}
+    		
+    		System.out.println("Message received : "+message.toString());
+//			String encryptMessage = encryptMessage(msg, key);
+    		String encryptMessage = HashGenerator.generateHash(msg);
 			
 			return encryptMessage;
 		} catch (Exception e) {
@@ -496,31 +589,36 @@ public class MainWindowController extends BaseController implements Initializabl
     		List<File> attachments,
     		String secretKey){
     	
-		String message;
+//		Message message = null;
 		try {
 			
-			MimeMessage mimeMessage = new MimeMessage(emailAccount.getSession());
-			mimeMessage.setFrom(emailAccount.getAddress());
-			mimeMessage.addRecipients(Message.RecipientType.TO, recipient);
-			mimeMessage.setSubject(subject);
+//			MimeMessage mimeMessage = new MimeMessage(emailAccount.getSession());
+//			mimeMessage.setFrom(new InternetAddress(emailAccount.getAddress()+"@peachy.in.net"));
+//			mimeMessage.addRecipients(Message.RecipientType.TO, recipient);
+//			mimeMessage.setSubject(subject);
+//			
+//			Multipart multipart = new MimeMultipart();
+//			BodyPart messageBodyPart = new MimeBodyPart();	
+//			messageBodyPart.setContent(content, "text/html");
+//			multipart.addBodyPart(messageBodyPart);
+//			mimeMessage.setContent(multipart);
+//			
+//			if(attachments.size()>0) {
+//				for (File file: attachments) {
+//					MimeBodyPart mimeBodyPart = new MimeBodyPart();
+//					DataSource source = new FileDataSource(file.getAbsolutePath());
+//					mimeBodyPart.setDataHandler(new DataHandler(source));
+//					mimeBodyPart.setFileName(file.getName());
+//					multipart.addBodyPart(mimeBodyPart);
+//				}
+//			}
+//			message = (MimeMessage)mimeMessage;
+
+//			String encryptMessage = encryptMessage(message.toString(), StringToSecretKey.stringToSecretKey(secretKey));
+			String encryptMessage = HashGenerator.generateHash(content);
+//			String encryptMessage = Integer.toString(message.hashCode());
+
 			
-			Multipart multipart = new MimeMultipart();
-			BodyPart messageBodyPart = new MimeBodyPart();	
-			messageBodyPart.setContent(content, "text/html");
-			multipart.addBodyPart(messageBodyPart);
-			mimeMessage.setContent(multipart);
-			
-			if(attachments.size()>0) {
-				for (File file: attachments) {
-					MimeBodyPart mimeBodyPart = new MimeBodyPart();
-					DataSource source = new FileDataSource(file.getAbsolutePath());
-					mimeBodyPart.setDataHandler(new DataHandler(source));
-					mimeBodyPart.setFileName(file.getName());
-					multipart.addBodyPart(mimeBodyPart);
-				}
-			}
-			message = MessageToString(mimeMessage);
-			String encryptMessage = encryptMessage(message,StringToSecretKey.stringToSecretKey(secretKey));
 			return encryptMessage;
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -558,29 +656,29 @@ public class MainWindowController extends BaseController implements Initializabl
 //       
 //    }
     
-    private String encryptMessage(String message, SecretKey secretKey) throws Exception{
+//    private String encryptMessage(String message, SecretKey secretKey) throws Exception{
     	// Generate AES key
 //        KeyGenerator keyGen = KeyGenerator.getInstance("AES");
 //        keyGen.init(128); // You can also use 192 or 256-bit key size
 //        SecretKey secretKey = keyGen.generateKey();
 
         // Initialize Cipher for encryption
-        Cipher cipher = Cipher.getInstance("AES");
-        cipher.init(Cipher.ENCRYPT_MODE, secretKey);
-
-        byte[] encryptedBytes = cipher.doFinal(message.getBytes());
-
-        // Convert encrypted bytes to a readable format
-        String encryptedText = Base64.getEncoder().encodeToString(encryptedBytes);
-        
-        return encryptedText;
+//        Cipher cipher = Cipher.getInstance("AES");
+//        cipher.init(Cipher.ENCRYPT_MODE, secretKey);
+//
+//        byte[] encryptedBytes = cipher.doFinal(message.getBytes());
+//
+//        // Convert encrypted bytes to a readable format
+//        String encryptedText = Base64.getEncoder().encodeToString(encryptedBytes);
+//        
+//        return encryptedText;
         // Initialize Cipher for decryption
 //        cipher.init(Cipher.DECRYPT_MODE, secretKey);
 //        byte[] decryptedBytes = cipher.doFinal(Base64.getDecoder().decode(encryptedText));
 //        String decryptedText = new String(decryptedBytes);
 //        System.out.println("Decrypted Text: " + decryptedText);
        
-    }
+//    }
     
     class StringToSecretKey {
 	    public static SecretKey stringToSecretKey(String encodedKey) {
@@ -595,5 +693,45 @@ public class MainWindowController extends BaseController implements Initializabl
 	        byte[] encodedKey = secretKey.getEncoded();
 	        return Base64.getEncoder().encodeToString(encodedKey);
 	    }
+	}
+    
+    
+	private boolean isMultipartType(String contentType) {
+		if (contentType.contains("multipart"))return true;
+		else return false;
+	}
+	
+	private boolean isTextPlain(String contentType) {
+		return contentType.contains("TEXT/PLAIN");
+	}
+
+	private boolean isSimpleType(String contentType) {
+		if(contentType.contains("TEXT/HTML") ||
+		   contentType.contains("mixed") ||
+		   contentType.contains("text")) {
+			return true;
+		} else return false;
+	}
+	
+	private String loadMultipart(Multipart multipart) throws MessagingException, IOException {
+		
+		String msg = "";
+		for (int i = 0; i < multipart.getCount() ; i++) {
+			BodyPart bodyPart = multipart.getBodyPart(i);
+			String contentType = bodyPart.getContentType();
+			if (isSimpleType(contentType)) {
+				
+				msg = bodyPart.getContent().toString();
+				
+			} else if (isMultipartType(contentType)){
+				Multipart multipart2 = (Multipart) bodyPart.getContent();
+				msg = loadMultipart(multipart2); 
+			} else if (!isTextPlain(contentType)) {				
+//				MimeBodyPart mbp = (MimeBodyPart) bodyPart;
+//				if (!emailMessage.isAttachmentLoaded())emailMessage.addAttachment(mbp);
+			}
+		}
+		
+		return msg;
 	}
 }

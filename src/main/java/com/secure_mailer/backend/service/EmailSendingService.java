@@ -14,6 +14,7 @@ import javax.mail.Transport;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
+import javax.mail.internet.InternetAddress;
 import com.secure_mailer.backend.EmailAccount;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
@@ -56,8 +57,9 @@ public class EmailSendingService extends Service<Void> {
 			protected Void call() throws Exception {
 				try {
 					
+					System.out.println("From email id : "+emailAccount.getAddress());
 					MimeMessage mimeMessage = new MimeMessage(emailAccount.getSession());
-					mimeMessage.setFrom(emailAccount.getAddress());
+					mimeMessage.setFrom(new InternetAddress(emailAccount.getAddress()+"@peachy.in.net"));
 					mimeMessage.addRecipients(Message.RecipientType.TO, recipient);
 					mimeMessage.setSubject(subject);
 					

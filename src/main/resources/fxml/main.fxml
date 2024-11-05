@@ -53,7 +53,7 @@
                   <String fx:value="font-grey" />
                </styleClass>
             </Label>
-            <Button fx:id="decrypt" layoutX="230.0" layoutY="10.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="78.0" text="Decrypt" onAction="#decryptEmail"/>
+            <Button fx:id="decrypt" layoutX="230.0" layoutY="10.0" mnemonicParsing="false" onAction="#decryptEmail" prefHeight="26.0" prefWidth="78.0" text="Decrypt" />
             <Button id="key-trash" layoutX="-183.0" layoutY="-591.0" mnemonicParsing="false" onAction="#trashKeyAction" prefHeight="25.0" prefWidth="25.0" stylesheets="@../css/themeDefault.css" AnchorPane.rightAnchor="-603.0" AnchorPane.topAnchor="-591.0" />
             <Button id="key-star" layoutX="-209.0" layoutY="-591.0" mnemonicParsing="false" onAction="#starKeyAction" prefHeight="25.0" prefWidth="25.0" stylesheets="@../css/themeDefault.css" AnchorPane.rightAnchor="-577.0" AnchorPane.topAnchor="-591.0" />
             <Line endX="336.5999755859375" layoutX="126.0" layoutY="79.0" startX="-99.4000244140625" strokeLineCap="ROUND" strokeWidth="2.0" styleClass="line" AnchorPane.leftAnchor="26.0" AnchorPane.rightAnchor="44.0" AnchorPane.topAnchor="78.0" />
@@ -138,5 +138,6 @@
          </children>
       </Pane>
       <Button layoutX="62.0" layoutY="512.0" mnemonicParsing="false" onAction="#openCRUDWindow" opacity="0.72" text="Enter Key" textFill="#373d04" />
+      <Button fx:id="generateKey" layoutX="51.0" layoutY="551.0" mnemonicParsing="false" onAction="#generateKey" opacity="0.69" text="Generate Key" />
    </children>
 </AnchorPane>

@@ -20,6 +20,8 @@ import javax.mail.internet.MimeBodyPart;
 import com.secure_mailer.frontend.EmailMessage;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
+import javax.mail.Part;
+
 
 public class MessageRendererService extends Service<Object>{
 	private EmailMessage emailMessage;
@@ -71,7 +73,13 @@ public class MessageRendererService extends Service<Object>{
 		for (int i = multipart.getCount() - 1; i >=0; i--) {
 			BodyPart bodyPart = multipart.getBodyPart(i);
 			String contentType = bodyPart.getContentType();
-			if (isSimpleType(contentType)) {
+			
+			 // Check if it is an attachment
+            String disposition = bodyPart.getDisposition();
+            if (disposition != null && disposition.equalsIgnoreCase(Part.ATTACHMENT) ) {
+				MimeBodyPart mbp = (MimeBodyPart) bodyPart;
+				if (!emailMessage.isAttachmentLoaded())emailMessage.addAttachment(mbp);
+			} else if (isSimpleType(contentType)) {
 				
 				if( emailMessage.getIsAuthenticated() ) {
 					stringBuffer.append(bodyPart.getContent().toString());
@@ -83,9 +91,7 @@ public class MessageRendererService extends Service<Object>{
 			} else if (isMultipartType(contentType)){
 				Multipart multipart2 = (Multipart) bodyPart.getContent();
 				loadMultipart(multipart2,stringBuffer); 
-			} else if (!isTextPlain(contentType)) {				
-				MimeBodyPart mbp = (MimeBodyPart) bodyPart;
-				if (!emailMessage.isAttachmentLoaded())emailMessage.addAttachment(mbp);
+//			} else if (!isTextPlain(contentType)) {
 			}
 		}
 	}

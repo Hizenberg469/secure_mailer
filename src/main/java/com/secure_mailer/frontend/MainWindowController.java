@@ -65,6 +65,8 @@ import javax.mail.BodyPart;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.Multipart;
+import javax.mail.Part;
+
 import java.util.List;
 
 import javafx.fxml.FXMLLoader;
@@ -718,20 +720,26 @@ public class MainWindowController extends BaseController implements Initializabl
 	private String loadMultipart(Multipart multipart) throws MessagingException, IOException {
 		
 		String msg = "";
-		for (int i = 0; i < multipart.getCount() ; i++) {
+		for (int i = multipart.getCount() - 1; i >= 0 ; i--) {
 			BodyPart bodyPart = multipart.getBodyPart(i);
 			String contentType = bodyPart.getContentType();
-			if (isSimpleType(contentType)) {
+			
+			 // Check if it is an attachment
+            String disposition = bodyPart.getDisposition();
+            if (disposition != null && disposition.equalsIgnoreCase(Part.ATTACHMENT)) {
+				
+			} else if (isSimpleType(contentType)) {
 				
 				msg = bodyPart.getContent().toString();
 				
 			} else if (isMultipartType(contentType)){
 				Multipart multipart2 = (Multipart) bodyPart.getContent();
 				msg = loadMultipart(multipart2); 
-			} else if (!isTextPlain(contentType)) {				
-//				MimeBodyPart mbp = (MimeBodyPart) bodyPart;
-//				if (!emailMessage.isAttachmentLoaded())emailMessage.addAttachment(mbp);
-			}
+			} 
+//			} else if (!isTextPlain(contentType)) {				
+////				MimeBodyPart mbp = (MimeBodyPart) bodyPart;
+////				if (!emailMessage.isAttachmentLoaded())emailMessage.addAttachment(mbp);
+//			}
 		}
 		
 		return msg;

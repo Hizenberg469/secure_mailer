@@ -26,6 +26,7 @@ import java.util.Properties;
 import javax.mail.Folder;
 import javax.mail.Session;
 import javax.mail.Store;
+import javax.mail.Part;
 
 public class EmailSendingService extends Service<Void> {
 
@@ -90,6 +91,7 @@ public class EmailSendingService extends Service<Void> {
 							DataSource source = new FileDataSource(file.getAbsolutePath());
 							mimeBodyPart.setDataHandler(new DataHandler(source));
 							mimeBodyPart.setFileName(file.getName());
+							mimeBodyPart.setDisposition(Part.ATTACHMENT);
 							multipart.addBodyPart(mimeBodyPart);
 						}
 					}

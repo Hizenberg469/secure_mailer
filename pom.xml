@@ -103,33 +103,33 @@
     <dependency>
         <groupId>org.openjfx</groupId>
         <artifactId>javafx-controls</artifactId>
-        <version>23</version> <!-- Adjust this version based on your setup -->
+        <version>23.0.1</version> <!-- Adjust this version based on your setup -->
     </dependency>
     <dependency>
         <groupId>org.openjfx</groupId>
         <artifactId>javafx-fxml</artifactId>
-        <version>23</version>
+        <version>23.0.1</version>
     </dependency>
     <dependency>
         <groupId>org.openjfx</groupId>
         <artifactId>javafx-graphics</artifactId>
-        <version>23</version>
+        <version>23.0.1</version>
     </dependency>
     
     <dependency>
         <groupId>org.openjfx</groupId>
         <artifactId>javafx-media</artifactId>
-        <version>23</version>
+        <version>23.0.1</version>
     </dependency>
     <dependency>
         <groupId>org.openjfx</groupId>
         <artifactId>javafx-swing</artifactId>
-        <version>23</version>
+        <version>23.0.1</version>
     </dependency>
     <dependency>
         <groupId>org.openjfx</groupId>
         <artifactId>javafx-web</artifactId>
-        <version>23</version>
+        <version>23.0.1</version>
     </dependency>
 
 <!-- JavaMail Dependency -->

@@ -277,9 +277,13 @@ public class MainWindowController extends BaseController implements Initializabl
 				sKey = SecretCodeDAO.getSecretCode(fromEmailId);
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
+				
 				e.printStackTrace();
 			}
         	
+        	if( sKey == null || sKey.isEmpty() ) {
+        		showAlert("Missing Secret Key","Register Secret Key for "+fromEmailId);
+        	}
 
         	String emlHash = generateEmlHash(emailMessage.getMessage(),StringToSecretKey.stringToSecretKey(sKey));
 //        	String emlHash = Integer.toString(emailMessage.getMessage().hashCode());
@@ -705,9 +709,9 @@ public class MainWindowController extends BaseController implements Initializabl
 		else return false;
 	}
 	
-	private boolean isTextPlain(String contentType) {
-		return contentType.contains("TEXT/PLAIN");
-	}
+//	private boolean isTextPlain(String contentType) {
+//		return contentType.contains("TEXT/PLAIN");
+//	}
 
 	private boolean isSimpleType(String contentType) {
 		if(contentType.contains("TEXT/HTML") ||

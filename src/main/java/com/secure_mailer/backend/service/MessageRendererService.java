@@ -77,8 +77,12 @@ public class MessageRendererService extends Service<Object>{
 			 // Check if it is an attachment
             String disposition = bodyPart.getDisposition();
             if (disposition != null && disposition.equalsIgnoreCase(Part.ATTACHMENT) ) {
-				MimeBodyPart mbp = (MimeBodyPart) bodyPart;
-				if (!emailMessage.isAttachmentLoaded())emailMessage.addAttachment(mbp);
+            	
+            	if( emailMessage.getIsAuthenticated()) {
+					MimeBodyPart mbp = (MimeBodyPart) bodyPart;
+					if (!emailMessage.isAttachmentLoaded())emailMessage.addAttachment(mbp);
+            	}
+            	
 			} else if (isSimpleType(contentType)) {
 				
 				if( emailMessage.getIsAuthenticated() ) {
@@ -89,16 +93,18 @@ public class MessageRendererService extends Service<Object>{
 				}
 				
 			} else if (isMultipartType(contentType)){
+
 				Multipart multipart2 = (Multipart) bodyPart.getContent();
 				loadMultipart(multipart2,stringBuffer); 
+
 //			} else if (!isTextPlain(contentType)) {
 			}
 		}
 	}
 	
-	private boolean isTextPlain(String contentType) {
-		return contentType.contains("TEXT/PLAIN");
-	}
+//	private boolean isTextPlain(String contentType) {
+//		return contentType.contains("TEXT/PLAIN");
+//	}
 
 	private boolean isSimpleType(String contentType) {
 		if(contentType.contains("TEXT/HTML") ||   
